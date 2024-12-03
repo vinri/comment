@@ -45,13 +45,15 @@ commentForm.addEventListener("submit", async (e) => {
   const name = document.getElementById("name").value;
   const comment = document.getElementById("comment").value;
 
+  console.log("Name: ", name); // Debugging
+  console.log("Comment: ", comment); // Debugging
+
   if (name && comment) {
     try {
-      // Add the comment to Firestore
       await addDoc(collection(db, "comments"), { name, comment });
-      commentForm.reset(); // Reset the form after submission
+      commentForm.reset();
     } catch (err) {
-      console.error("Error adding comment: ", err); // Log any error that occurs
+      console.error("Error adding comment: ", err);
     }
   }
 });
