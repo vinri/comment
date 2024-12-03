@@ -18,8 +18,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app = initializeApp(firebaseConfig); // No need for `firebase.initializeApp()`
+const db = getFirestore(app); // Get Firestore reference using modular API
 
 // DOM Elements
 const commentForm = document.getElementById("comment-form");
@@ -27,9 +27,9 @@ const commentsList = document.getElementById("comments-list");
 
 // Fetch and render comments
 const fetchComments = () => {
-  const commentsRef = collection(db, "comments"); // Firestore collection
+  const commentsRef = collection(db, "comments"); // Get reference to Firestore collection
   onSnapshot(commentsRef, (snapshot) => {
-    commentsList.innerHTML = "";
+    commentsList.innerHTML = ""; // Clear existing comments
     snapshot.forEach((doc) => {
       const comment = doc.data();
       const listItem = document.createElement("li");
@@ -47,8 +47,8 @@ commentForm.addEventListener("submit", async (e) => {
 
   if (name && comment) {
     try {
-      await addDoc(collection(db, "comments"), { name, comment });
-      commentForm.reset();
+      await addDoc(collection(db, "comments"), { name, comment }); // Add comment to Firestore
+      commentForm.reset(); // Reset form after submitting
     } catch (err) {
       console.error("Error adding comment: ", err);
     }
