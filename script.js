@@ -5,9 +5,6 @@ import {
   collection,
   addDoc,
   onSnapshot,
-  orderBy,
-  query,
-  serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
 // Firebase Configuration (replace with your Firebase config)
@@ -31,9 +28,7 @@ const commentsList = document.getElementById("comments-list");
 // Fetch and render comments
 const fetchComments = () => {
   const commentsRef = collection(db, "comments");
-  // Query to get comments ordered by timestamp (desc)
-  const q = query(commentsRef, orderBy("timestamp", "desc"));
-  onSnapshot(q, (snapshot) => {
+  onSnapshot(commentsRef, (snapshot) => {
     commentsList.innerHTML = "";
     snapshot.forEach((doc) => {
       const comment = doc.data();
@@ -52,12 +47,7 @@ commentForm.addEventListener("submit", async (e) => {
 
   if (name && comment) {
     try {
-      // Add a new comment with a timestamp
-      await addDoc(collection(db, "comments"), {
-        name,
-        comment,
-        timestamp: serverTimestamp(), // Add server timestamp
-      });
+      await addDoc(collection(db, "comments"), { name, comment });
       commentForm.reset();
     } catch (err) {
       console.error("Error adding comment: ", err);
