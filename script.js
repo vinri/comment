@@ -1,4 +1,4 @@
-// Import Firebase modules
+// Import Firebase modules using the correct CDN for ES modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import {
   getFirestore,
