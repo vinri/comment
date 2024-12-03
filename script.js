@@ -38,23 +38,30 @@ const fetchComments = () => {
     });
   });
 };
-
 // Add a new comment
 commentForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  // Get input values
   const name = document.getElementById("name").value;
   const comment = document.getElementById("comment").value;
 
-  console.log("Name: ", name); // Debugging
-  console.log("Comment: ", comment); // Debugging
+  // Debugging: Check if values are correctly retrieved
+  console.log("Form submitted!");
+  console.log("Name:", name);
+  console.log("Comment:", comment);
 
   if (name && comment) {
     try {
+      // Add the comment to Firestore
       await addDoc(collection(db, "comments"), { name, comment });
-      commentForm.reset();
+      console.log("Comment added successfully!"); // Debugging
+      commentForm.reset(); // Reset form after submission
     } catch (err) {
-      console.error("Error adding comment: ", err);
+      console.error("Error adding comment: ", err); // Log any error that occurs
     }
+  } else {
+    console.log("Name or Comment is missing!"); // Debugging
   }
 });
 
