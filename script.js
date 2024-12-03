@@ -1,12 +1,3 @@
-// Import Firebase modules
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  onSnapshot,
-} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
-
 // Firebase Configuration (replace with your Firebase config)
 const firebaseConfig = {
   apiKey: "AIzaSyD2LRja-8a0YkVYSY9CNZx5DtjZwVXf9nA",
@@ -18,8 +9,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app = firebase.initializeApp(firebaseConfig); // Using the global Firebase object
+const db = firebase.firestore(app); // Access Firestore
 
 // DOM Elements
 const commentForm = document.getElementById("comment-form");
@@ -27,8 +18,8 @@ const commentsList = document.getElementById("comments-list");
 
 // Fetch and render comments
 const fetchComments = () => {
-  const commentsRef = collection(db, "comments");
-  onSnapshot(commentsRef, (snapshot) => {
+  const commentsRef = db.collection("comments"); // Use Firestore collection
+  commentsRef.onSnapshot((snapshot) => {
     commentsList.innerHTML = "";
     snapshot.forEach((doc) => {
       const comment = doc.data();
@@ -38,30 +29,20 @@ const fetchComments = () => {
     });
   });
 };
+
 // Add a new comment
 commentForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  // Get input values
   const name = document.getElementById("name").value;
   const comment = document.getElementById("comment").value;
 
-  // Debugging: Check if values are correctly retrieved
-  console.log("Form submitted!");
-  console.log("Name:", name);
-  console.log("Comment:", comment);
-
   if (name && comment) {
     try {
-      // Add the comment to Firestore
-      await addDoc(collection(db, "comments"), { name, comment });
-      console.log("Comment added successfully!"); // Debugging
-      commentForm.reset(); // Reset form after submission
+      await db.collection("comments").add({ name, comment });
+      commentForm.reset();
     } catch (err) {
-      console.error("Error adding comment: ", err); // Log any error that occurs
+      console.error("Error adding comment: ", err);
     }
-  } else {
-    console.log("Name or Comment is missing!"); // Debugging
   }
 });
 
