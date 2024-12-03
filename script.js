@@ -1,3 +1,12 @@
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+
 // Firebase Configuration (replace with your Firebase config)
 const firebaseConfig = {
   apiKey: "AIzaSyD2LRja-8a0YkVYSY9CNZx5DtjZwVXf9nA",
@@ -9,8 +18,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig); // Using the global Firebase object
-const db = firebase.firestore(app); // Access Firestore
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 // DOM Elements
 const commentForm = document.getElementById("comment-form");
@@ -18,8 +27,8 @@ const commentsList = document.getElementById("comments-list");
 
 // Fetch and render comments
 const fetchComments = () => {
-  const commentsRef = db.collection("comments"); // Use Firestore collection
-  commentsRef.onSnapshot((snapshot) => {
+  const commentsRef = collection(db, "comments"); // Firestore collection
+  onSnapshot(commentsRef, (snapshot) => {
     commentsList.innerHTML = "";
     snapshot.forEach((doc) => {
       const comment = doc.data();
@@ -38,7 +47,7 @@ commentForm.addEventListener("submit", async (e) => {
 
   if (name && comment) {
     try {
-      await db.collection("comments").add({ name, comment });
+      await addDoc(collection(db, "comments"), { name, comment });
       commentForm.reset();
     } catch (err) {
       console.error("Error adding comment: ", err);
